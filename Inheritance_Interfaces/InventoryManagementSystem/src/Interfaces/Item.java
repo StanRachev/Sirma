@@ -1,7 +1,7 @@
 package Interfaces;
 
 public interface Item {
-    public void itemDetails();
-    public int calculateValue();
+    public String itemDetails();
+    public double calculateValue();
     public int getItemsDescription();
 }
