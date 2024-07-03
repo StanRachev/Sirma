@@ -11,6 +11,14 @@ public class ElectronicsItem extends InventoryItem {
         this.warranty = warranty;
     }
 
+    public String getBrand() {
+        return brand;
+    }
+
+    public int getWarranty() {
+        return warranty;
+    }
+
     @Override
     public double calculateValue() {
         return getQuantity() * getItemPrice();
