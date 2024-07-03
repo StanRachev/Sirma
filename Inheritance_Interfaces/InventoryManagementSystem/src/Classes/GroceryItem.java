@@ -11,6 +11,14 @@ public class GroceryItem extends InventoryItem {
         this.type = type;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
     @Override
     public double calculateValue() {
         return getQuantity() * getItemPrice();
