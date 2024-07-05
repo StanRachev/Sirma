@@ -4,9 +4,8 @@ public class GroceryItem extends InventoryItem {
     private String name;
     private String type;
 
-    public GroceryItem(String name, String type, String category, double price,
-                       int itemId, int quantity) {
-        super(category, false, true, price, itemId, quantity);
+    public GroceryItem(String name, String type, String category, double price, int quantity) {
+        super(category, false, true, price, quantity);
         this.name = name;
         this.type = type;
     }
@@ -22,5 +21,20 @@ public class GroceryItem extends InventoryItem {
     @Override
     public double calculateValue() {
         return getQuantity() * getItemPrice();
+    }
+
+    @Override
+    public String getItemsDescription() {
+        return toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Type: Grocery" + "\n" +
+                "ID: " + getItemId() + "\n" +
+                "Name: " + name + "\n" +
+                "Type: " + type + "\n" +
+                "Category: " + getItemCategory() + "\n" +
+                "Price: " + getItemPrice();
     }
 }
