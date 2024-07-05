@@ -18,12 +18,10 @@ public abstract class AbstractItem implements Item, Categorizable, Breakable,
     }
 
     public AbstractItem() {
-
     }
 
     @Override
-    public String itemDetails() {
-        return this.toString();
+    public void itemDetails() {
     }
 
     @Override
@@ -32,8 +30,8 @@ public abstract class AbstractItem implements Item, Categorizable, Breakable,
     }
 
     @Override
-    public int getItemsDescription() {
-        return 0;
+    public String getItemsDescription() {
+        return null;
     }
 
     @Override
@@ -76,11 +74,9 @@ public abstract class AbstractItem implements Item, Categorizable, Breakable,
 
     @Override
     public String toString() {
-        return "AbstractItem{" +
-                "category='" + category + '\'' +
-                ", breakable=" + breakable +
-                ", perishable=" + perishable +
-                ", price=" + price +
-                '}';
+        return "Category = '" + category + "\n" +
+                "Breakable = " + breakable + "\n" +
+                "Perishable = " + perishable + "\n" +
+                "Price = " + price;
     }
 }
