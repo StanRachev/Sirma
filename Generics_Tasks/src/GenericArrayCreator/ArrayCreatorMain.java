@@ -4,7 +4,7 @@ public class ArrayCreatorMain {
     public static void main(String[] args) {
         // Class that creates an Array of a given type
         // Returns an Array with given length and default item
-        
+
         String[] arrStr = ArrayCreator.create(String.class,5, "Haha");
         print(arrStr);
 
