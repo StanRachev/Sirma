@@ -8,7 +8,7 @@ public class ArrayCreator<T> {
     }
 
     public static <T> T[] create(int length, T item) {
-        T[] items = (T[]) new Object[length];
+        T[] items = (T[]) Array.newInstance(item.getClass(), length);
 
         for (int i = 0; i < items.length; i++) {
             items[i] = item;
