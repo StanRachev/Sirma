@@ -1,4 +1,4 @@
-package SwapMethod;
+package GenericSwapMethod;
 
 import java.util.List;
 
