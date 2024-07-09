@@ -10,6 +10,9 @@ public class ArrayCreatorMain {
 
         Integer[] arrInt = ArrayCreator.create(Integer.class,5, 1992);
         print(arrInt);
+
+        Double[] arrDouble = ArrayCreator.create(5, 3.14);
+        print(arrDouble);
     }
 
     private static <T> void print(T[] arr) {
