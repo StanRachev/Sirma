@@ -2,7 +2,7 @@ package GenericBox;
 
 import java.lang.reflect.Array;
 
-public class Box<T> {
+public class Box<T extends Comparable<T>> {
     private T[] items;
     private int size;
 
