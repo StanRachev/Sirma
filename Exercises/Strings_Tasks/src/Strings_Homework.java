@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Strings_Home {
+public class Strings_Homework {
     public static void main(String[] args) {
 
 //        reverseStrings();
