@@ -1,6 +1,4 @@
 # Sirma Academy Projects and Homework
-Here, I will update all the projects and homework assignments I develop during my time at Sirma Academy.
-
 ### About
 This repository contains various coding projects and homework assignments I complete during the Academy. My goal is to showcase my work and provide a resource for others who may be interested in similar topics.
 
