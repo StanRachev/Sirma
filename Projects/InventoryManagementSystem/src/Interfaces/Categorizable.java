@@ -1,6 +1,6 @@
 package Interfaces;
 
 public interface Categorizable {
-    public String getItemCategory();
-    public void setItemCategory(String category);
+    public String getCategory();
+    public void setCategory(String category);
 }

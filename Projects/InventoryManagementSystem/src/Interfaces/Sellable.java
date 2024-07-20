@@ -1,6 +1,6 @@
 package Interfaces;
 
 public interface Sellable {
-    public double getItemPrice();
-    public void setItemPrice(int price);
+    public double getPrice();
+    public void setPrice(int price);
 }
