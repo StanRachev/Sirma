@@ -1,56 +1,241 @@
 package Classes;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UI {
-    private List<InventoryItem> items;
-    BufferedReader reader;
+    private InventoryManager manager = new InventoryManager();
+    private static BufferedReader reader;
 
     public UI() {
-        items = new ArrayList<>();
         reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public void showMenuOption() throws IOException {
         System.out.println("""
                 1. Add item
-                2. Remove items by ID
-                3. Display items
+                2. Display items
+                3. Remove items by ID
                 4. Categorize items
-                5. Exit
-                """);
-        /*
                 5. Place order
-                6. Add Inventory to File
-                7. Load Inventory from File
-        */
-        System.out.print("Enter your choice: ");
-        int choice = choice(5);
+                6. Save items to file
+                7. Load items from file
+                8. Exit
+                """);
+        System.out.print("-> ");
+        int choice = choice(8);
 
         switch (choice) {
             case 1:
                 addItem();
                 break;
             case 2:
-                removeItemsById();
+                displayItems();
+                returnToMenu();
                 break;
             case 3:
-                displayItems();
+                removeItemsById();
                 break;
             case 4:
                 categorizeItems();
                 break;
             case 5:
-                placeOrder();
+//                placeOrder();
                 break;
             case 6:
+                saveInventoryToFile();
+                break;
+            case 7:
+                loadInventoryFromFile();
                 break;
             default:
                 reader.close();
+        }
+    }
+
+    private void returnToMenu() {
+        try {
+            showMenuOption();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int choice(int totalChoices) {
+        int choice = 0;
+        while (true) {
+            try {
+                choice = Integer.parseInt(reader.readLine());
+                if (choice >= 1 && choice <= totalChoices) {
+                    break;
+                } else if (choice == -1) {
+                    return -1;
+                }else {
+                    System.out.println("Choose 1 - " + totalChoices);
+                    System.out.print("-> ");
+                }
+            } catch (NumberFormatException | IOException e) {
+                System.out.println("Use numbers 1 - " + totalChoices);
+                System.out.print("-> ");
+            }
+        }
+        return choice;
+    }
+
+    private double choice(double weight) {
+        double choice = 0;
+        while (true) {
+            try {
+                choice = Double.parseDouble(reader.readLine());
+                if (choice >= 0 && choice <= weight) {
+                    break;
+                } else {
+                    System.out.println("Choose 0 - " + weight);
+                    System.out.print("-> ");
+                }
+            } catch (NumberFormatException | IOException e) {
+                System.out.println("Use number 0 - " + weight);
+                System.out.print("-> ");
+            }
+        }
+        return choice;
+    }
+
+    private String getLastModified(File file) {
+
+        if (file.exists()) {
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+            return formatter.format(file.lastModified());
+        } else {
+            System.out.println("File not found.");
+        }
+        return null;
+    }
+
+    private List<File> listFiles() {
+        File file = new File("C:\\Users\\vival\\OneDrive\\Desktop\\Stan\\Java\\Sirma\\Homeworks_For_GitHub\\Sirma\\Projects\\InventoryManagementSystem\\");
+        File[] files = file.listFiles();
+
+        System.out.printf("   %-35s %10s", "Name", "Date Modified");
+        System.out.println();
+
+        int cntr = 0;
+        List<File> fileList = new ArrayList<>();
+        for (var f : files) {
+            if (f.toString().endsWith(".csv")) {
+                System.out.printf("%d. %-35s %10s", ++cntr, f.getName(), getLastModified(f));
+                System.out.println();
+                fileList.add(f);
+            }
+        }
+        System.out.println();
+
+        return fileList;
+    }
+
+    private static List<File> getFileNames() {
+        File file = new File("C:\\Users\\vival\\OneDrive\\Desktop\\Stan\\Java\\Sirma\\Homeworks_For_GitHub\\Sirma\\Projects\\InventoryManagementSystem\\");
+        File[] files = file.listFiles();
+
+        List<File> fileList = new ArrayList<>();
+        for (var f : files) {
+            if (f.toString().endsWith(".csv")) {
+                fileList.add(f);
+            }
+        }
+        return fileList;
+    }
+
+    private boolean exists(String path) {
+        List<File> files = getFileNames();
+
+        try {
+            for (var f : files) {
+                if (f.getName().equals(path + ".csv")) {
+                    System.out.printf("File %s already exists. Do you want to replace it? (Y/N)", f.getName());
+                    System.out.println();
+                    System.out.print("-> ");
+                    String choice = reader.readLine();
+                    if (choice.equalsIgnoreCase("y")) {
+                        return true;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public void saveToExistingFile() {
+        List<File> files = listFiles();
+
+        System.out.println("Please choose a file to save to");
+        System.out.print("-> ");
+
+        int choice = choice(files.size());
+
+        SaveFile.saveInventoryToExistingFile(manager.getInventory(), files.get(choice - 1).getAbsolutePath());
+
+        returnToMenu();
+    }
+
+    public void saveNewFile() {
+        System.out.println("Please enter the name of the file:");
+        System.out.print("-> ");
+
+        while (true) {
+            try {
+                String path = reader.readLine();
+
+                if (path.isEmpty()) {
+                    System.out.println("Please enter name");
+                    System.out.print("-> ");
+                    continue;
+                }
+
+                if (!exists(path)) {
+                    saveInventoryToFile();
+                }
+
+                SaveFile.saveInventoryToNewFile(manager.getInventory(), (path + ".csv"));
+
+                System.out.println("Inventory successfully saved");
+                showMenuOption();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void saveInventoryToFile() {
+        System.out.println(
+                """
+                1. Save/Add to existing file
+                2. Save to new file
+                3. Exit
+                """
+        );
+
+        System.out.print("-> ");
+
+        int choice = choice(2);
+
+        switch (choice) {
+            case 1:
+                saveToExistingFile();
+                break;
+            case 2:
+                saveNewFile();
+                break;
+            default:
+                returnToMenu();
         }
     }
 
@@ -60,96 +245,106 @@ public class UI {
                 1. Fragile
                 2. Electronics
                 3. Grocery
+                4. Return
                 """);
         System.out.print("-> ");
+        int choice = choice(4);
 
-        int choice = choice(3);
+        if (choice == 4 || choice == -1) {
+            returnToMenu();
+        }
 
-        System.out.println("Category: ");
+        System.out.print("Id: ");
+        int id = Integer.parseInt(reader.readLine());
+
+        
+
+        System.out.print("Name: ");
+        String name = reader.readLine();
+        System.out.print("Category: ");
         String category = reader.readLine();
-        System.out.println("Quantity: ");
+        System.out.print("Price: ");
+        double price = choice(10_000);
+        System.out.print("Quantity: ");
         int quantity = choice(10_000);
-        System.out.println("Price: ");
-        int price = choice(10_000);
+
+        double weight = 0;
+
+        if (choice == 1) {
+            System.out.print("Weight: ");
+            weight = choice(10_000.0);
+        }
+
+        System.out.println();
 
         switch (choice) {
             case 1: {
-                System.out.println("Material: ");
-                String material = reader.readLine();
-                System.out.println("Weight: ");
-                double weight = choice(10_000.0);
-                items.add(new FragileItem(weight, material, category, price, quantity));
+                manager.add(new FragileItem(id, name, category, price, quantity, weight));
             } break;
             case 2: {
-                System.out.println("Brand: ");
-                String brand = reader.readLine();
-                System.out.println("Warranty: ");
-                int warranty = choice(60);
-                items.add(new ElectronicsItem(brand, warranty, category, price, quantity));
+                manager.add(new ElectronicsItem(id, name, category, price, quantity));
             } break;
             default:
-                System.out.println("Name: ");
-                String name = reader.readLine();
-                System.out.println("Type: ");
-                String type = reader.readLine();
-                items.add(new GroceryItem(name, type, category, price, quantity));
+                manager.add(new GroceryItem(id, name, category, price, quantity));
         }
+        System.out.println("Item successfully created!");
 
         showMenuOption();
     }
 
     private void removeItemsById() throws IOException {
-        System.out.print("Remove by ID (-1 to exit): ");
+        boolean hasFiles = manager.displayItems();
 
-        int id = choice(Integer.MAX_VALUE);
-
-        if (id == -1) {
-            showMenuOption();
+        if (!hasFiles) {
+            returnToMenu();
         }
 
-        InventoryItem itemToRemove = null;
-        for (var item : items) {
-            if (item.getItemId() == id) {
-                itemToRemove = item;
-                break;
+        while (true) {
+            boolean isRemoved = false;
+
+            System.out.print("ID (-1 to exit): ");
+
+            int id = choice(Integer.MAX_VALUE);
+
+            if (id == -1) {
+                showMenuOption();
+            }
+            isRemoved = manager.removeItemById(id);
+
+            if (isRemoved) {
+                if (manager.getInventory().isEmpty()) {
+                    returnToMenu();
+                }
+                removeItemsById();
             }
         }
-
-        if (itemToRemove != null) {
-            items.remove(itemToRemove);
-            System.out.println("Item removed.");
-        } else {
-            System.out.println("Item not found.");
-        }
-        showMenuOption();
     }
 
     private void displayItems() throws IOException {
-        if (items.isEmpty()) {
-            System.out.println("Inventory is empty");
-            showMenuOption();
-        } else {
-            for (var item : items) {
-                System.out.println(item.getItemsDescription());
-                System.out.println();
-            }
-        }
-        showMenuOption();
+        manager.displayItems();
     }
 
-    private void categorizeItems() throws IOException {
+    private void categorizeItems() {
 
+        var items = manager.getInventory();
         while (true) {
-            if (items.isEmpty()) {
-                System.out.println("Inventory is empty");
-                break;
-            } else {
-                System.out.print("Choose an item by ID (-1 to exit): ");
-            }
-
             int choice = 0;
             try {
+                displayItems();
+
+                if (manager.getInventory().isEmpty()) {
+                    System.out.println("Inventory is empty");
+                    returnToMenu();
+                } else {
+                    System.out.println("Choose an item by ID (-1 to exit): ");
+                    System.out.print("-> ");
+                }
+
                 choice = Integer.parseInt(reader.readLine());
+
+                if (choice == -1) {
+                    returnToMenu();
+                }
 
                 InventoryItem itemToCategorize = null;
                 for (var item : items) {
@@ -160,19 +355,26 @@ public class UI {
                 if (itemToCategorize != null) {
                     System.out.print("Enter category: ");
                     String category = reader.readLine();
-                    itemToCategorize.setItemCategory(category);
+
+                    switch (itemToCategorize) {
+                        case FragileItem fragileItem -> fragileItem.setCategory(category);
+                        case ElectronicsItem electronicsItem -> electronicsItem.setCategory(category);
+                        case GroceryItem groceryItem -> groceryItem.setCategory(category);
+                        default -> {
+                        }
+                    }
+
                 } else {
                     System.out.println("Item not found. Try again:");
                 }
-                break;
+                returnToMenu();
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Use numbers");
             }
         }
-        showMenuOption();
     }
 
-    private void placeOrder() throws IOException {
+/*    private void placeOrder() throws IOException {
         try {
             System.out.print("Product ID: ");
             int id = Integer.parseInt(reader.readLine());
@@ -205,40 +407,38 @@ public class UI {
             System.out.println("Use numbers");
         }
     }
+*/
 
-    private int choice(int totalChoices) {
+    public void loadInventoryFromFile() {
+        List<File> files = listFiles();
+
         int choice = 0;
         while (true) {
             try {
-                choice = Integer.parseInt(reader.readLine());
-                if (choice >= 1 && choice <= totalChoices) {
-                    break;
-                } else if (choice == -1) {
-                    return -1;
-                }else {
-                    System.out.println("Choose 1 - " + totalChoices);
-                }
-            } catch (NumberFormatException | IOException e) {
-                System.out.println("Use numbers 1 - " + totalChoices);
-            }
-        }
-        return choice;
-    }
+                System.out.println("Please choose a file to load from (-1 to exit))");
+                System.out.print("-> ");
 
-    private double choice(double weight) {
-        double choice = 0;
-        while (true) {
-            try {
-                choice = Double.parseDouble(reader.readLine());
-                if (choice >= 0 && choice <= weight) {
-                    break;
-                } else {
-                    System.out.println("Choose 0 - " + weight);
+                choice = choice(files.size());
+
+                if (choice == -1) {
+                    returnToMenu();
                 }
-            } catch (NumberFormatException | IOException e) {
-                System.out.println("Use number 0 - " + weight);
+
+                System.out.println("Inventory will be replaced. Do you wish to proceed? (Y/N)");
+                System.out.print("-> ");
+                String choice2 = reader.readLine();
+                if (choice2.equalsIgnoreCase("y")) {
+                    break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return choice;
+
+        manager.setInventory(LoadFile.loadInventoryFromFile(files.get(choice - 1).getAbsolutePath()));
+
+        System.out.println("Inventory successfully loaded!");
+
+        returnToMenu();
     }
 }

@@ -1,40 +1,48 @@
 package Classes;
 
-public class GroceryItem extends InventoryItem {
-    private String name;
-    private String type;
+import Interfaces.Categorizable;
+import Interfaces.Perishable;
+import Interfaces.Sellable;
 
-    public GroceryItem(String name, String type, String category, double price, int quantity) {
-        super(category, false, true, price, quantity);
-        this.name = name;
-        this.type = type;
-    }
+public class GroceryItem extends InventoryItem implements Categorizable, Perishable, Sellable {
+    private String category;
+    private boolean perishable;
 
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
+    public GroceryItem(int itemId, String name, String category, double price, int quantity) {
+        super(itemId, name, price, quantity);
+        this.category = category;
+        this.perishable = true;
     }
 
     @Override
-    public double calculateValue() {
-        return getQuantity() * getItemPrice();
+    public String getCategory() {
+        return this.category;
     }
 
     @Override
-    public String getItemsDescription() {
-        return toString();
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
-    public String toString() {
-        return "Type: Grocery" + "\n" +
-                "ID: " + getItemId() + "\n" +
-                "Name: " + name + "\n" +
-                "Type: " + type + "\n" +
-                "Category: " + getItemCategory() + "\n" +
-                "Price: " + getItemPrice();
+    public boolean isPerishable() {
+        return this.perishable;
+    }
+
+    @Override
+    public void handleExpiration() {
+        if (this.perishable) {
+            System.out.println(this.name + " has expired!");
+        }
+    }
+
+    @Override
+    public double getPrice() {
+        return this.price;
+    }
+
+    @Override
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

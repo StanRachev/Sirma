@@ -1,40 +1,33 @@
 package Classes;
 
-public class ElectronicsItem extends InventoryItem {
-    private String brand;
-    private int warranty;
+import Interfaces.Categorizable;
+import Interfaces.Sellable;
 
-    public ElectronicsItem(String brand, int warranty, String category, double price, int quantity) {
-        super(category, true, true, price, quantity);
-        this.brand = brand;
-        this.warranty = warranty;
-    }
+public class ElectronicsItem extends InventoryItem implements Categorizable, Sellable {
+    private String category;
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public int getWarranty() {
-        return warranty;
+    public ElectronicsItem(int itemId, String name, String category, double price, int quantity) {
+        super(itemId, name, price, quantity);
+        this.category = category;
     }
 
     @Override
-    public double calculateValue() {
-        return getQuantity() * getItemPrice();
+    public String getCategory() {
+        return this.category;
     }
 
     @Override
-    public String getItemsDescription() {
-        return toString();
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
-    public String toString() {
-        return "Type: Electronics" + "\n" +
-                "ID: " + getItemId() + "\n" +
-                "Band: " + brand + "\n" +
-                "Warranty: " + warranty + "\n" +
-                "Category: " + getItemCategory() + "\n" +
-                "Price: " + getItemPrice();
+    public double getPrice() {
+        return this.price;
+    }
+
+    @Override
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

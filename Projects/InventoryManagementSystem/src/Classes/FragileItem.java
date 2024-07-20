@@ -1,40 +1,59 @@
 package Classes;
 
-public class FragileItem extends InventoryItem {
-    private double weight;
-    private String material;
+import Interfaces.Breakable;
+import Interfaces.Categorizable;
+import Interfaces.Sellable;
 
-    public FragileItem(double weight, String material, String category, double price, int quantity) {
-        super(category, true, false, price, quantity);
+public class FragileItem extends InventoryItem implements Categorizable, Breakable, Sellable {
+    private String category;
+    private boolean breakable;
+    private double weight;
+
+    public FragileItem(int itemId, String name, String category, double price, int quantity, double weight) {
+        super(itemId, name, price, quantity);
+        this.category = category;
+        this.breakable = true;
         this.weight = weight;
-        this.material = material;
+    }
+
+    @Override
+    public boolean isBreakable() {
+        return this.breakable;
+    }
+
+    @Override
+    public void handleBreakage() {
+        if (this.breakable) {
+            System.out.println(this.name + " is broken!");
+        }
+    }
+
+    @Override
+    public String getCategory() {
+        return this.category;
+    }
+
+    @Override
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @Override
+    public double getPrice() {
+        return this.price;
+    }
+
+    @Override
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public double getWeight() {
         return weight;
     }
 
-    public String getMaterial() {
-        return material;
-    }
-
     @Override
     public double calculateValue() {
-        return getQuantity() * getItemPrice() + (this.weight / 1000);
-    }
-
-    @Override
-    public String getItemsDescription() {
-        return toString();
-    }
-
-    @Override
-    public String toString() {
-        return "Type: Fragile" + "\n" +
-                "ID: " + getItemId() + "\n" +
-                "Weight: " + weight + "\n" +
-                "Material: " + material + "\n" +
-                "Category: " + getItemCategory() + "\n" +
-                "Price: " + getItemPrice();
+        return super.calculateValue() + (this.weight * 0.1); // Example calculation
     }
 }
