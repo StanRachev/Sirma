@@ -1,6 +1,8 @@
 package Classes;
 
-public abstract class AbstractItem {
+import Interfaces.Item;
+
+public abstract class AbstractItem implements Item {
     protected String name;
     protected double price;
 
@@ -18,7 +20,7 @@ public abstract class AbstractItem {
     }
 
     public String getItemDetails() {
-        return "Name: " + name + ", Price: " + price;
+        return String.format("%-20s %-20s", ("Name: " + name), ("Price: " + price));
     }
 
     public abstract double calculateValue();

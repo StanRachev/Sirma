@@ -5,13 +5,11 @@ import Interfaces.Categorizable;
 import Interfaces.Sellable;
 
 public class FragileItem extends InventoryItem implements Categorizable, Breakable, Sellable {
-    private String category;
     private boolean breakable;
     private double weight;
 
     public FragileItem(int itemId, String name, String category, double price, int quantity, double weight) {
-        super(itemId, name, price, quantity);
-        this.category = category;
+        super(itemId, name, price, quantity, category);
         this.breakable = true;
         this.weight = weight;
     }
@@ -30,12 +28,12 @@ public class FragileItem extends InventoryItem implements Categorizable, Breakab
 
     @Override
     public String getCategory() {
-        return this.category;
+        return super.getCategory();
     }
 
     @Override
     public void setCategory(String category) {
-        this.category = category;
+        super.setCategory(category);
     }
 
     @Override

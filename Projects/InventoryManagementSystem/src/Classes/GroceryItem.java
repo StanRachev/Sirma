@@ -5,23 +5,21 @@ import Interfaces.Perishable;
 import Interfaces.Sellable;
 
 public class GroceryItem extends InventoryItem implements Categorizable, Perishable, Sellable {
-    private String category;
     private boolean perishable;
 
     public GroceryItem(int itemId, String name, String category, double price, int quantity) {
-        super(itemId, name, price, quantity);
-        this.category = category;
+        super(itemId, name, price, quantity, category);
         this.perishable = true;
     }
 
     @Override
     public String getCategory() {
-        return this.category;
+        return super.getCategory();
     }
 
     @Override
     public void setCategory(String category) {
-        this.category = category;
+        super.setCategory(category);
     }
 
     @Override
@@ -44,5 +42,10 @@ public class GroceryItem extends InventoryItem implements Categorizable, Perisha
     @Override
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    @Override
+    public double calculateValue() {
+        return super.calculateValue(); // Example calculation
     }
 }

@@ -3,11 +3,21 @@ package Classes;
 public class InventoryItem extends AbstractItem {
     private int itemId;
     private int quantity;
+    private String category;
 
-    public InventoryItem(int itemId, String name, double price, int quantity) {
+    public InventoryItem(int itemId, String name, double price, int quantity, String category) {
         super(name, price);
         this.itemId = itemId;
         this.quantity = quantity;
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getItemId() {
@@ -28,7 +38,7 @@ public class InventoryItem extends AbstractItem {
 
     @Override
     public String getItemDetails() {
-        return "ID: " + itemId + ", " + super.getItemDetails() + ", Quantity: " + quantity;
+        return String.format("%-20s %s %-20s %-20s", ("ID: " + itemId), (super.getItemDetails()), ("Category: " + category), ("Quantity: " + quantity));
     }
 
     @Override
