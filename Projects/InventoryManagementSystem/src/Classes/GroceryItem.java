@@ -7,6 +7,13 @@ import Interfaces.Sellable;
 public class GroceryItem extends InventoryItem implements Categorizable, Perishable, Sellable {
     private boolean perishable;
 
+    public GroceryItem() {
+    }
+
+    public GroceryItem(GroceryItem item, int quantity) {
+        super(item.getItemId(), item.getName(), item.getPrice(), quantity, item.getCategory());
+    }
+
     public GroceryItem(int itemId, String name, String category, double price, int quantity) {
         super(itemId, name, price, quantity, category);
         this.perishable = true;

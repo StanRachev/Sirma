@@ -5,6 +5,13 @@ import Interfaces.Sellable;
 
 public class ElectronicsItem extends InventoryItem implements Categorizable, Sellable {
 
+    public ElectronicsItem() {
+    }
+
+    public ElectronicsItem(ElectronicsItem item, int quantity) {
+        super(item.getItemId(), item.getName(), item.getPrice(), quantity, item.getCategory());
+    }
+
     public ElectronicsItem(int itemId, String name, String category, double price, int quantity) {
         super(itemId, name, price, quantity, category);
     }

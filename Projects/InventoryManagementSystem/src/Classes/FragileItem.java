@@ -8,6 +8,16 @@ public class FragileItem extends InventoryItem implements Categorizable, Breakab
     private boolean breakable;
     private double weight;
 
+    public FragileItem() {
+    }
+
+    public FragileItem(FragileItem item, int quantity) {
+        super(item.getItemId(), item.getName(), item.getPrice(), quantity, item.getCategory());
+        this.breakable = true;
+        this.weight = item.getWeight();
+
+    }
+
     public FragileItem(int itemId, String name, String category, double price, int quantity, double weight) {
         super(itemId, name, price, quantity, category);
         this.breakable = true;

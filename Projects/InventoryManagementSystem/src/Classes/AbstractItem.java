@@ -6,6 +6,9 @@ public abstract class AbstractItem implements Item {
     protected String name;
     protected double price;
 
+    public AbstractItem() {
+    }
+
     public AbstractItem(String name, double price) {
         this.name = name;
         this.price = price;
