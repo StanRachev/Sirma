@@ -1,112 +1,85 @@
 package Classes;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class InventoryManager {
 
-    private List<InventoryItem> inventory = new ArrayList<>();
+    private List<InventoryItem> inventory;
+    private static BufferedReader reader;
 
     public InventoryManager() {
+        inventory = new ArrayList<>();
+        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    private String getLastModified(File file) {
-        if (file.exists()) {
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-            return formatter.format(file.lastModified());
-        } else {
-            System.out.println("File not found.");
-        }
-        return null;
-    }
+    public void searchByName() {
+        while (true) {
+            try {
+                System.out.print("(-1 to exit) -> ");
+                String name = reader.readLine();
 
-    public void searchByName(String name) {
-        Pattern pattern = Pattern.compile(name);
-        Matcher matcher;
+                if (name.equals("-1")) {
+                    return;
+                }
 
-        boolean hasItem = false;
-        for (var i : inventory) {
-            matcher = pattern.matcher(i.getName().toLowerCase());
-            if (matcher.find()) {
-                System.out.println(i.getItemDetails());
-                hasItem = true;
-            }
-        }
-        System.out.println();
+                Pattern pattern = Pattern.compile(name);
+                Matcher matcher;
 
-        if (!hasItem) {
-            System.out.println("No result");
-        }
-    }
-
-    public void searchByCategory(String category) {
-        Pattern pattern = Pattern.compile(category);
-        Matcher matcher;
-
-        boolean hasItem = false;
-        for (var i : inventory) {
-            matcher = pattern.matcher(i.getCategory().toLowerCase());
-            if (matcher.find()) {
-                System.out.println(i.getItemDetails());
-                hasItem = true;
-            }
-        }
-        System.out.println();
-
-        if (!hasItem) {
-            System.out.println("No result");
-        }
-    }
-
-    public boolean exists(int id) {
-
-        boolean idExists = false;
-        for (var item : inventory) {
-            if (id == item.getItemId()) {
-                System.out.println("There is an item with this ID");
-                idExists = true;
-            }
-        }
-        return idExists;
-    }
-
-    public List<File> getFileNames() {
-        File file = new File("inventory/");
-        File[] files = file.listFiles();
-
-        List<File> fileList = new ArrayList<>();
-        for (var f : files) {
-            if (f.toString().endsWith(".csv")) {
-                fileList.add(f);
-            }
-        }
-        return fileList;
-    }
-
-    public List<File> getFiles() {
-        File file = new File("inventory/");
-        File[] files = file.listFiles();
-
-        System.out.printf("   %-35s %10s", "Name", "Date Modified");
-        System.out.println();
-
-        int cntr = 0;
-        List<File> fileList = new ArrayList<>();
-        for (var f : files) {
-            if (f.toString().endsWith(".csv")) {
-                System.out.printf("%d. %-35s %10s", ++cntr, f.getName(), getLastModified(f));
+                boolean hasItem = false;
+                for (var i : inventory) {
+                    matcher = pattern.matcher(i.getName().toLowerCase());
+                    if (matcher.find()) {
+                        System.out.println(i.getItemDetails());
+                        hasItem = true;
+                    }
+                }
                 System.out.println();
-                fileList.add(f);
+
+                if (!hasItem) {
+                    System.out.println("No result");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        System.out.println();
-
-        return fileList;
     }
 
+    public void searchByCategory() {
+        while (true) {
+            try {
+                System.out.print("(-1 to exit) -> ");
+                String category = reader.readLine();
+
+                if (category.equals("-1")) {
+                    return;
+                }
+
+                Pattern pattern = Pattern.compile(category);
+                Matcher matcher;
+
+                boolean hasItem = false;
+                for (var i : inventory) {
+                    matcher = pattern.matcher(i.getCategory().toLowerCase());
+                    if (matcher.find()) {
+                        System.out.println(i.getItemDetails());
+                        hasItem = true;
+                    }
+                }
+                System.out.println();
+
+                if (!hasItem) {
+                    System.out.println("No result");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void categorizeItems() {
         Map<String, List<InventoryItem>> categories = new TreeMap<>();
@@ -129,8 +102,10 @@ public class InventoryManager {
     public void sortByPrice(List<InventoryItem> itemsToSort, int choice) {
         if (choice == 1) {
             itemsToSort.sort(Comparator.comparing(InventoryItem::getPrice));
-        } else {
+        } else if (choice == 2) {
             itemsToSort.sort(Comparator.comparing(InventoryItem::getPrice).reversed());
+        } else {
+            return;
         }
 
         System.out.println();
@@ -143,8 +118,10 @@ public class InventoryManager {
     public void sortByCategory(List<InventoryItem> itemsToSort, int choice) {
         if (choice == 1) {
             itemsToSort.sort(Comparator.comparing(InventoryItem::getCategory));
-        } else {
+        } else if (choice == 2) {
             itemsToSort.sort(Comparator.comparing(InventoryItem::getCategory).reversed());
+        } else {
+            return;
         }
 
         System.out.println();
@@ -157,8 +134,10 @@ public class InventoryManager {
     public void sortByName(List<InventoryItem> itemsToSort, int choice) {
         if (choice == 1) {
             itemsToSort.sort(Comparator.comparing(InventoryItem::getName));
-        } else {
+        } else if (choice == 2) {
             itemsToSort.sort(Comparator.comparing(InventoryItem::getName).reversed());
+        } else {
+            return;
         }
 
         System.out.println();
@@ -176,7 +155,7 @@ public class InventoryManager {
         return inventory;
     }
 
-    public void add(InventoryItem item) {
+    public void addItem(InventoryItem item) {
         inventory.add(item);
     }
 
@@ -202,5 +181,30 @@ public class InventoryManager {
         }
         System.out.println();
         return true;
+    }
+
+    public InventoryItem getItemById(int id) {
+        InventoryItem item = null;
+        while (true) {
+            for (var i : inventory) {
+                if (id == i.getItemId()) {
+                    item = i;
+                    break;
+                }
+            }
+            return item;
+        }
+    }
+
+    public int getAvailableQuantity(Cart cart, InventoryItem item) {
+        var itemsInCart = cart.getCart();
+
+        for (var i : itemsInCart.entrySet()) {
+            var itemInCart = i.getValue();
+            if (itemInCart.getItemId() == item.getItemId()) {
+                return item.getQuantity() - itemInCart.getQuantity();
+            }
+        }
+        return 0;
     }
 }
