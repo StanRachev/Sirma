@@ -7,4 +7,5 @@ This repository contains various coding projects and homework assignments I comp
 
 ### Exerscises
 * **Generics**: Several tasks aimed at improving my understanding of Generics.
+* **SOLID**: Tasks I completed to practice applying the SOLID principles.
 * **Strings**: Tasks for manipulating strings using methods from the String class and Pattern/Matcher with regex.
